@@ -1,29 +1,33 @@
-import { useContext } from 'react'
-
-import { ProductContext } from '../context'
+import React, { Component } from 'react'
 import Product from './Product'
 import Title from './Title'
-
-function ProductList() {
-  const state = useContext(ProductContext)
-
-  return (
-    <>
-      <div className='py-5'>
-        <div className='container'>
-          <div className='row'>
+import { storeProducts } from '../data'
+import styled from 'styled-components'
+import { ProductConsumer } from '../context'
+export default class ProductList extends Component {
+  state = {
+    products: storeProducts,
+  }
+  render() {
+    return (
+      <React.Fragment>
+        <ProductWrapper className='py-5'>
+          <div className='container'>
             <Title name='our' title='products' />
-
             <div className='row'>
-              {state.products.map((product) => (
-                <Product product={product} key={product.id} />
-              ))}
+              <ProductConsumer>
+                {(value) => {
+                  return value.products.map((product) => {
+                    return <Product key={product.id} product={product} />
+                  })
+                }}
+              </ProductConsumer>
             </div>
           </div>
-        </div>
-      </div>
-    </>
-  )
+        </ProductWrapper>
+      </React.Fragment>
+    )
+  }
 }
 
-export default ProductList
+const ProductWrapper = styled.section``

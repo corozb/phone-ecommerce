@@ -1,28 +1,32 @@
-import React, { useContext } from 'react'
-import { ProductContext } from '../../context'
+import React, { Component } from 'react'
 import Title from '../Title'
 import CartColumns from './CartColumns'
 import CartList from './CartList'
 import CartTotals from './CartTotals'
+import { ProductConsumer } from '../../context'
 import EmptyCart from './EmptyCart'
-
-function Cart() {
-  const state = useContext(ProductContext)
-
-  return (
-    <section>
-      {state.cart.length > 0 ? (
-        <>
-          <Title name='your' title='cart' />
-          <CartColumns />
-          <CartList state={state} />
-          <CartTotals state={state} />
-        </>
-      ) : (
-        <EmptyCart />
-      )}
-    </section>
-  )
+export default class Store extends Component {
+  render() {
+    return (
+      <section>
+        <ProductConsumer>
+          {(value) => {
+            const { cart } = value
+            if (cart.length > 0) {
+              return (
+                <React.Fragment>
+                  <Title name='your' title='cart' />
+                  <CartColumns />
+                  <CartList value={value} />
+                  <CartTotals value={value} history={this.props.history} />
+                </React.Fragment>
+              )
+            } else {
+              return <EmptyCart />
+            }
+          }}
+        </ProductConsumer>
+      </section>
+    )
+  }
 }
-
-export default Cart
